@@ -4,6 +4,11 @@
     
     "require": {
         "symfony/console" : "*"
-    }
+    },
 
+    "autoload": {
+        "psr-0": {
+            "Apirevmonitor\\": "src/main/php"
+        }
+    }
 }
