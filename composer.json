@@ -1,0 +1,9 @@
+{
+    "name": "mindyk/apirev-monitor",
+    "description": "monitoring apilib revision by games",
+    
+    "require": {
+        "symfony/console" : "*"
+    }
+
+}
