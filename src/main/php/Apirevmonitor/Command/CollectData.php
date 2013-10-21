@@ -90,13 +90,18 @@ class CollectData extends ConsoleCommand {
 
 	}
 
-	public function setCli(Proxy $cli) {
-		$this->cli = $cli;
-		$this->cli->setDryRun(true);
-	}
-
+	/**
+	 * ! has to be set before others (e.g. setCli)
+	 *
+	 * @param array $config
+	 */
 	public function setConfig(array $config) {
 		$this->config = $config;
+	}
+
+	public function setCli(Proxy $cli) {
+		$this->cli = $cli;
+		$this->cli->setDryRun($this->config['dry-run']);
 	}
 
 	public function setProcessor(AccessLog $processor) {

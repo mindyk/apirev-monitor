@@ -13,8 +13,8 @@ $config = json_decode($rawJsonConfig, true);
 $app = new Application();
 
 $collectDataCmd = new Apirevmonitor\Command\CollectData();
-$collectDataCmd->setCli(new Apirevmonitor\Shell\Proxy());
 $collectDataCmd->setConfig($config);
+$collectDataCmd->setCli(new Apirevmonitor\Shell\Proxy());
 $collectDataCmd->setProcessor(new Apirevmonitor\Processor\AccessLog(new \Apirevmonitor\FileIterator\Factory(), new \Apirevmonitor\Map\Game()));
 
 $app->add($collectDataCmd);
