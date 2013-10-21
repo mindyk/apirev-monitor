@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: michael.indyk
- * Date: 21.10.13
- * Time: 14:45
- * To change this template use File | Settings | File Templates.
- */
 
 namespace Apirevmonitor\FileIterator;
 

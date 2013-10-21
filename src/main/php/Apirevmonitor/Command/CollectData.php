@@ -55,7 +55,7 @@ class CollectData extends ConsoleCommand {
 		$output->writeln('saving data');
 		$this->saveData();
 		$output->writeln('outputting data');
-		$this->outputData();
+		$this->outputData($output);
 		$output->writeln('... finish');
 	}
 
@@ -86,8 +86,9 @@ class CollectData extends ConsoleCommand {
 
 	}
 
-	private function outputData() {
-
+	private function outputData(OutputInterface $output) {
+		$data = $this->processor->getData();
+		$output->writeln(print_r($data, true));
 	}
 
 	/**

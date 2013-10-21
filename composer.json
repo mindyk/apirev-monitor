@@ -4,7 +4,8 @@
     
     "require": {
         "symfony/console" : "*",
-        "mindyk/file-iterator": "dev-master"
+        "mindyk/file-iterator": "dev-master",
+        "monolog/monolog" : "*"
     },
 
     "autoload": {

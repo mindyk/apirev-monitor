@@ -78,6 +78,10 @@ class AccessLog {
 		}
 		$this->data['revisions'][$revision]['resource_id'] = $resourceId;
 	}
+
+	public function getData() {
+		return $this->data;
+	}
 }
 
 class AccessLogLine {
