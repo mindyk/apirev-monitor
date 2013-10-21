@@ -38,7 +38,12 @@ class CollectData extends ConsoleCommand {
 	protected function configure(){
 		$this->setName('collect-data')
 			->setDescription('gets access.log from api01-04.portal and process it')
-			->setHelp('The <info>collect-data</info> command copys access.log via scp from api01-04.portal and process the data for monitoring');
+			->setHelp('The <info>collect-data</info> command copys access.log via scp from api01-04.portal and process the data for monitoring')
+			->setDefinition(array(
+				new InputOption('tmp', null, InputOption::VALUE_NONE, 'use last tmp logs instead of collecting new (good for filtering)'),
+				new InputOption('revision', null, InputOption::VALUE_OPTIONAL, 'filters by revison'),
+				new InputOption('game', null, InputOption::VALUE_OPTIONAL, 'filters by game'),
+			));
 	}
 
 	protected function initialize(InputInterface $input, OutputInterface $output) {

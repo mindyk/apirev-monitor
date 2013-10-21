@@ -29,7 +29,10 @@ class AccessLog {
 	/**
 	 * @var array
 	 */
-	private $data = array('resources' => array(), 'revisions' => array(), 'sum' => array('request_count' => 0));
+	private $data = array(
+		'resources' => array(),
+		'revisions' => array(),
+		'sum' => array('request_count' => 0));
 
 	/**
 	 * @var \Apirevmonitor\Map\Game
@@ -74,6 +77,11 @@ class AccessLog {
 		}
 		$this->data['resources'][$resourceId] = $line->getRevision();
 
+		$gameId = $this->map->resourceToGame($resourceId);
+		if (!isset($this->data['games'][$gameId])) {
+			$this->data['games'][$gameId] = array();
+		}
+
 		if (!isset($this->data['revisions'][$revision])) {
 			$this->data['revisions'][$revision] = array();
 		}
@@ -85,6 +93,13 @@ class AccessLog {
 		$countRev = count($this->data['revisions']);
 		$this->data['sum']['resource_count'] = $countResources;
 		$this->data['sum']['rev_count'] = $countRev;
+
+		$this->data['sum']['games'] = array();
+		foreach ($this->data['resources'] as $resourceId => $rev) {
+			$gameId = $this->map->resourceToGame($resourceId);
+			$this->data['sum']['games'][$gameId][$rev] = $rev;
+		}
+
 		return $this->data;
 	}
 }
@@ -120,7 +135,7 @@ class AccessLogLine {
 			return 765; // revision before api-rev header
 		}
 
-		return (int) str_replace('r', '', $this->revision);
+		return (int)str_replace('r', '', $this->revision);
 	}
 
 	public function getRequest() {
