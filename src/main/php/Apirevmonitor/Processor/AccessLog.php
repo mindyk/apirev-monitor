@@ -60,7 +60,7 @@ class AccessLog {
 		try {
 			$line = new AccessLogLine($rawLine);
 		} catch (\Exception $e) {
-			//echo $e->getMessage();
+			echo $e->getMessage();
 			return;
 		}
 
@@ -104,6 +104,7 @@ class AccessLogLine {
 		$this->http_response_code = $simpleSegmentation[3];
 		$this->request = $simpleSegmentation[5];
 		$this->remote_addr = $simpleSegmentation[7];
+		$this->resource = $this->processRequest();
 	}
 
 	public function getDate() {
@@ -126,13 +127,17 @@ class AccessLogLine {
 		return $this->remote_addr;
 	}
 
-	public function getResource() {
+	private function processRequest() {
 		$request = $this->getRequest();
 		$simpleSegmentation = explode('/', $request);
 		if (count($simpleSegmentation) != 6) {
-			throw new \RuntimeException("invalid segmentation count");
+			throw new \RuntimeException("invalid segmentation count in " . $request);
 		}
 
 		return $simpleSegmentation[3];
+	}
+
+	public function getResource() {
+		return $this->resource;
 	}
 }
