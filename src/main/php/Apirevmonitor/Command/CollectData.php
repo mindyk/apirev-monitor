@@ -14,7 +14,7 @@ use Apirevmonitor\Shell\Proxy;
 
 class CollectData extends ConsoleCommand {
 
-	const localPathFormat = 'tmp/api0%d.portal.access_%s.log';
+	const localPathFormat = 'tmp/example.log';
 	/**
 	 * @var Proxy $cli
 	 */
@@ -73,7 +73,7 @@ class CollectData extends ConsoleCommand {
 
 	private function processAccessLogs() {
 		$timestamp = $this->dateTime->getTimestamp();
-		for ($i=1;$i<=4;$i++) {
+		for ($i=1;$i<=1;$i++) {
 			$currentLocalPath = sprintf(self::localPathFormat, $i, $timestamp);
 			$this->processor->addLog($currentLocalPath);
 		}

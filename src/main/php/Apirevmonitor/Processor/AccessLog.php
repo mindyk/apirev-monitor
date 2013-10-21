@@ -60,6 +60,7 @@ class AccessLog {
 		try {
 			$line = new AccessLogLine($rawLine);
 		} catch (\Exception $e) {
+			//echo $e->getMessage();
 			return;
 		}
 
@@ -94,26 +95,44 @@ class AccessLogLine {
 
 	public function __construct($raw) {
 		$simpleSegmentation = explode(' ', $raw);
+		if (count($simpleSegmentation) != 8) {
+			throw new \RuntimeException("invalid segmentation count");
+		}
 
+		$this->date = \DateTime::createFromFormat("[d/M/Y:H:i:s", $simpleSegmentation[0]);
+		$this->revision = $simpleSegmentation[2];
+		$this->http_response_code = $simpleSegmentation[3];
+		$this->request = $simpleSegmentation[5];
+		$this->remote_addr = $simpleSegmentation[7];
 	}
 
 	public function getDate() {
-		return new \DateTime();
+		return $this->date;
 	}
 
 	public function getRevision() {
-		return 777;
+		if ($this->revision == 'r-') {
+			return 765; // revision bevore api-rev header
+		}
+
+		return (int) str_replace('r', '', $this->revision);
 	}
 
 	public function getRequest() {
-		return 'PUT /api/games/5/players/698221012 HTTP/1.1';
+		return $this->request;
 	}
 
 	public function getRemoteIP() {
-		return '127.0.0.0';
+		return $this->remote_addr;
 	}
 
 	public function getResource() {
-		return 134;
+		$request = $this->getRequest();
+		$simpleSegmentation = explode('/', $request);
+		if (count($simpleSegmentation) != 6) {
+			throw new \RuntimeException("invalid segmentation count");
+		}
+
+		return $simpleSegmentation[3];
 	}
 }
