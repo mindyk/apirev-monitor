@@ -72,15 +72,19 @@ class AccessLog {
 		if (!isset($this->data['resources'][$resourceId])) {
 			$this->data['resources'][$resourceId] = array();
 		}
-		$this->data['resources'][$resourceId]['api-rev'] = $line->getRevision();
+		$this->data['resources'][$resourceId] = $line->getRevision();
 
 		if (!isset($this->data['revisions'][$revision])) {
 			$this->data['revisions'][$revision] = array();
 		}
-		$this->data['revisions'][$revision]['resource_id'] = $resourceId;
+		$this->data['revisions'][$revision][$resourceId] = $resourceId;
 	}
 
 	public function getData() {
+		$countResources = count($this->data['resources']);
+		$countRev = count($this->data['revisions']);
+		$this->data['sum']['resource_count'] = $countResources;
+		$this->data['sum']['rev_count'] = $countRev;
 		return $this->data;
 	}
 }
@@ -113,7 +117,7 @@ class AccessLogLine {
 
 	public function getRevision() {
 		if ($this->revision == 'r-') {
-			return 765; // revision bevore api-rev header
+			return 765; // revision before api-rev header
 		}
 
 		return (int) str_replace('r', '', $this->revision);

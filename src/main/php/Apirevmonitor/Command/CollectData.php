@@ -88,7 +88,7 @@ class CollectData extends ConsoleCommand {
 
 	private function outputData(OutputInterface $output) {
 		$data = $this->processor->getData();
-		$output->writeln(print_r($data, true));
+		$output->writeln(print_r($data['sum'], true));
 	}
 
 	/**
