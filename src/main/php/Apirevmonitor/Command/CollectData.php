@@ -2,6 +2,7 @@
 
 namespace Apirevmonitor\Command;
 
+use Apirevmonitor\Processor\AccessLog;
 use Apirevmonitor\Shell\Command\Scp;
 use Symfony\Component\Console\Command\Command as ConsoleCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,6 +14,7 @@ use Apirevmonitor\Shell\Proxy;
 
 class CollectData extends ConsoleCommand {
 
+	const localPathFormat = 'tmp/api0%d.portal.access_%s.log';
 	/**
 	 * @var Proxy $cli
 	 */
@@ -27,6 +29,11 @@ class CollectData extends ConsoleCommand {
 	 * @var array
 	 */
 	protected $config;
+
+	/**
+	 * @var AccessLog
+	 */
+	protected $processor;
 
 	protected function configure(){
 		$this->setName('collect-data')
@@ -43,6 +50,12 @@ class CollectData extends ConsoleCommand {
 		$this->cli->setOutput($output);
 		$output->writeln('collecting logs');
 		$this->collectAccessLogs();
+		$output->writeln('processing logs');
+		$this->processAccessLogs();
+		$output->writeln('saving data');
+		$this->saveData();
+		$output->writeln('outputting data');
+		$this->outputData();
 		$output->writeln('... finish');
 	}
 
@@ -50,13 +63,31 @@ class CollectData extends ConsoleCommand {
 		$timestamp = $this->dateTime->getTimestamp();
 		$remotePath = 'www/portal-api/logs/access.log';
 		$remoteFormat = $this->config['api_server_url'];
-		$localFormat = 'tmp/api0%d.portal.access_%s.log';
 		for ($i=1;$i<=4;$i++) {
 			$currentRemotePath = sprintf($remoteFormat, $i, $remotePath);
-			$currentLocalPath = sprintf($localFormat, $i, $timestamp);
+			$currentLocalPath = sprintf(self::localPathFormat, $i, $timestamp);
 
 			$this->cli->run(new Scp($currentRemotePath, $currentLocalPath));
 		}
+	}
+
+	private function processAccessLogs() {
+		$timestamp = $this->dateTime->getTimestamp();
+		for ($i=1;$i<=4;$i++) {
+			$currentLocalPath = sprintf(self::localPathFormat, $i, $timestamp);
+			$this->processor->addLog($currentLocalPath);
+		}
+
+		$this->processor->process();
+
+	}
+
+	private function saveData() {
+
+	}
+
+	private function outputData() {
+
 	}
 
 	public function setCli(Proxy $cli) {
@@ -66,6 +97,10 @@ class CollectData extends ConsoleCommand {
 
 	public function setConfig(array $config) {
 		$this->config = $config;
+	}
+
+	public function setProcessor(AccessLog $processor) {
+		$this->processor = $processor;
 	}
 
 }

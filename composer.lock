@@ -3,8 +3,51 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "757923282e902887627186563d3069e7",
+    "hash": "fde2407d877d7dc735182ea57de94d1d",
     "packages": [
+        {
+            "name": "mindyk/file-iterator",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mindyk/FileIterator.git",
+                "reference": "2849203fc29b99069bdd0da8832fc00e2d030e49"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mindyk/FileIterator/zipball/2849203fc29b99069bdd0da8832fc00e2d030e49",
+                "reference": "2849203fc29b99069bdd0da8832fc00e2d030e49",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "FileIterator": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Indyk",
+                    "email": "michael.indyk@gmail.com",
+                    "homepage": "http://www.indyk.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "File Iterator for PHP",
+            "homepage": "https://github.com/mindyk/FileIterator",
+            "keywords": [
+                "file",
+                "iterator"
+            ],
+            "time": "2013-10-18 18:46:40"
+        },
         {
             "name": "symfony/console",
             "version": "v2.3.6",
@@ -66,9 +109,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "mindyk/file-iterator": 20
+    },
     "platform": [
 
     ],

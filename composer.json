@@ -3,7 +3,8 @@
     "description": "monitoring apilib revision by games",
     
     "require": {
-        "symfony/console" : "*"
+        "symfony/console" : "*",
+        "mindyk/file-iterator": "dev-master"
     },
 
     "autoload": {
