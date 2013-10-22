@@ -10,9 +10,8 @@
 namespace Apirevmonitor\Processor;
 
 
-use Apirevmonitor\FileIterator\Factory;
+use mindyk\FileIterator\Factory;
 use Apirevmonitor\Map\Game;
-use Apirevmonitor\Map\Map;
 
 class AccessLog {
 
@@ -22,7 +21,7 @@ class AccessLog {
 	private $logs = array();
 
 	/**
-	 * @var \Apirevmonitor\FileIterator\Factory
+	 * @var \mindyk\FileIterator\Factory
 	 */
 	private $fileIteratorFactory;
 

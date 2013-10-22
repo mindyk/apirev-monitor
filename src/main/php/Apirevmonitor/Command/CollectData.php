@@ -75,17 +75,6 @@ class CollectData extends ConsoleCommand {
 		return $logs;
 	}
 
-
-
-	private function saveData() {
-
-	}
-
-	private function outputData(OutputInterface $output) {
-		$data = $this->processor->getData();
-		$output->writeln(print_r($data['sum'], true));
-	}
-
 	/**
 	 * ! has to be set before others (e.g. setCli)
 	 *
@@ -99,9 +88,4 @@ class CollectData extends ConsoleCommand {
 		$this->cli = $cli;
 		$this->cli->setDryRun($this->config['dry-run']);
 	}
-
-	public function setProcessor(AccessLog $processor) {
-		$this->processor = $processor;
-	}
-
 }

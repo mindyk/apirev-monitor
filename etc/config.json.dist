@@ -1,4 +1,5 @@
 {
 	"api_server_url" : "###API_SERVER_URL###",
-	"dry-run": "1"
+	"dry-run": "1",
+	"db_path": "etc/apirev.db"
 }

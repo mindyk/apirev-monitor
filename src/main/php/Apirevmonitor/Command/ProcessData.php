@@ -35,6 +35,11 @@ class ProcessData extends ConsoleCommand {
 	 */
 	protected $processor;
 
+	/**
+	 * @var \Apirevmonitor\Storage\AccessLog
+	 */
+	protected $storage;
+
 	protected function configure(){
 		$this->setName('process-data')
 			->setDescription('process collected access logs')
@@ -76,11 +81,29 @@ class ProcessData extends ConsoleCommand {
 		$data = $this->processAccessLogs($logs);
 
 		$output->writeln('... finish processing');
-		$output->writeln('data summery:');
-		$output->writeln(print_r($data['sum'], true));
+		$output->writeln("\n".'data summery:');
+		$this->outputData($output, $data);
+		$output->writeln("");
 		$output->writeln('saving data ...');
+		$this->saveData($data);
 		$output->writeln('... data saved');
 		$output->writeln('... finished command');
+	}
+
+	private function saveData(array $data) {
+		$this->storage->storeData($data);
+	}
+
+	private function outputData(OutputInterface $output, $data) {
+		$output->writeln('number of requests processed: '. $data['sum']['request_count']);
+		$output->writeln('number of diff resources within these requests: '. $data['sum']['request_count']);
+		$output->writeln('number of diff revisions: '. $data['sum']['rev_count']);
+		$output->writeln('<info>revisions per game</info>');
+		foreach ($data['sum']['games'] as $gameId => $rev) {
+			$output->write("<comment>$gameId</comment> ");
+			$output->write(implode(', ', $rev));
+			$output->write("\n");
+		}
 	}
 
 	private function collectAccessLogsFromTmp() {
@@ -105,7 +128,7 @@ class ProcessData extends ConsoleCommand {
 		}
 		$this->processor->process();
 
-		return $this->processor->getData();;
+		return $this->processor->getData();
 	}
 
 	/**
@@ -124,5 +147,9 @@ class ProcessData extends ConsoleCommand {
 
 	public function setProcessor(AccessLog $processor) {
 		$this->processor = $processor;
+	}
+
+	public function setStorage(\Apirevmonitor\Storage\AccessLog $storage) {
+		$this->storage = $storage;
 	}
 }
