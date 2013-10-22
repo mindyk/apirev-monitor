@@ -14,6 +14,7 @@ use Apirevmonitor\Shell\Proxy;
 
 class ProcessData extends ConsoleCommand {
 
+	const MANY_LOGS = 4;
 	/**
 	 * @var Proxy $cli
 	 */
@@ -55,11 +56,23 @@ class ProcessData extends ConsoleCommand {
 		if (empty($logs)) {
 			throw new \RuntimeException("no logs found! try command collect-data");
 		}
+		$countLogs = count($logs);
+
 		$output->writeln("logs found:");
 		foreach ($logs as $path) {
 			$output->writeln('<info>'. $path ."</info>");
 		}
-		$output->writeln("processing ...");
+		if ($countLogs > self::MANY_LOGS) {
+			$dialog = $this->getHelperSet()->get('dialog');
+			if (!$dialog->askConfirmation(
+				$output,
+				'<question>many logs! could take a while to process. Continue with this action [y|n]?</question>',
+				false
+			)) {
+				return;
+			}
+		}
+		$output->writeln("processing ... (this will take a minute or two ...)");
 		$data = $this->processAccessLogs($logs);
 
 		$output->writeln('... finish processing');
