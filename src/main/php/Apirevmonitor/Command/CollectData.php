@@ -14,7 +14,7 @@ use Apirevmonitor\Shell\Proxy;
 
 class CollectData extends ConsoleCommand {
 
-	const localPathFormat = 'tmp/example.log';
+	const localPathFormat = 'tmp/api0%d.portal.access_%d.log';
 	/**
 	 * @var Proxy $cli
 	 */
@@ -54,9 +54,19 @@ class CollectData extends ConsoleCommand {
 		$output->writeln('running ...');
 		$this->cli->setOutput($output);
 		$output->writeln('collecting logs');
-		$this->collectAccessLogs();
+		$logs = array();
+		if ($input->getOption('tmp')) {
+			$output->writeln("from tmp");
+			$logs = $this->collectAccessLogsFromTmp();
+
+		} else {
+			$logs = $this->collectAccessLogs();
+		}
+		foreach ($logs as $path) {
+			$output->writeln('<info>'. $path ."</info>");
+		}
 		$output->writeln('processing logs');
-		$this->processAccessLogs();
+		$this->processAccessLogs($logs);
 		$output->writeln('saving data');
 		$this->saveData();
 		$output->writeln('outputting data');
@@ -64,7 +74,24 @@ class CollectData extends ConsoleCommand {
 		$output->writeln('... finish');
 	}
 
+	private function collectAccessLogsFromTmp() {
+		$logs = array();
+		$dir = new \DirectoryIterator('tmp');
+
+		/**
+		 * @var \SplFileInfo $fileinfo
+		 */
+		foreach ($dir as $fileinfo) {
+			if (!$fileinfo->isDot()) {
+				$logs[] = $fileinfo->getRealPath();
+			}
+		}
+
+		return $logs;
+	}
+
 	private function collectAccessLogs() {
+		$logs = array();
 		$timestamp = $this->dateTime->getTimestamp();
 		$remotePath = 'www/portal-api/logs/access.log';
 		$remoteFormat = $this->config['api_server_url'];
@@ -73,18 +100,17 @@ class CollectData extends ConsoleCommand {
 			$currentLocalPath = sprintf(self::localPathFormat, $i, $timestamp);
 
 			$this->cli->run(new Scp($currentRemotePath, $currentLocalPath));
+			$logs[]  = $currentLocalPath;
 		}
+
+		return $logs;
 	}
 
-	private function processAccessLogs() {
-		$timestamp = $this->dateTime->getTimestamp();
-		for ($i=1;$i<=1;$i++) {
-			$currentLocalPath = sprintf(self::localPathFormat, $i, $timestamp);
-			$this->processor->addLog($currentLocalPath);
+	private function processAccessLogs(array $logs) {
+		foreach ($logs  as $path) {
+			$this->processor->addLog($path);
 		}
-
 		$this->processor->process();
-
 	}
 
 	private function saveData() {
