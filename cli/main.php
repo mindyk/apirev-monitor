@@ -16,7 +16,12 @@ $collectDataCmd = new Apirevmonitor\Command\CollectData();
 $collectDataCmd->setConfig($config);
 $collectDataCmd->setCli(new Apirevmonitor\Shell\Proxy());
 $collectDataCmd->setProcessor(new Apirevmonitor\Processor\AccessLog(new \Apirevmonitor\FileIterator\Factory(), new \Apirevmonitor\Map\Game()));
-
 $app->add($collectDataCmd);
+
+$processDataCmd = new \Apirevmonitor\Command\ProcessData();
+$processDataCmd->setConfig($config);
+$processDataCmd->setCli(new Apirevmonitor\Shell\Proxy());
+$processDataCmd->setProcessor(new Apirevmonitor\Processor\AccessLog(new \Apirevmonitor\FileIterator\Factory(), new \Apirevmonitor\Map\Game()));
+$app->add($processDataCmd);
 
 $app->run();

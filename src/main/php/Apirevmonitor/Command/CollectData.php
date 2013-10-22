@@ -38,12 +38,7 @@ class CollectData extends ConsoleCommand {
 	protected function configure(){
 		$this->setName('collect-data')
 			->setDescription('gets access.log from api01-04.portal and process it')
-			->setHelp('The <info>collect-data</info> command copys access.log via scp from api01-04.portal and process the data for monitoring')
-			->setDefinition(array(
-				new InputOption('tmp', null, InputOption::VALUE_NONE, 'use last tmp logs instead of collecting new (good for filtering)'),
-				new InputOption('revision', null, InputOption::VALUE_OPTIONAL, 'filters by revison'),
-				new InputOption('game', null, InputOption::VALUE_OPTIONAL, 'filters by game'),
-			));
+			->setHelp('The <info>collect-data</info> command copys access.log via scp from api01-04.portal and process the data for monitoring');
 	}
 
 	protected function initialize(InputInterface $input, OutputInterface $output) {
@@ -54,41 +49,15 @@ class CollectData extends ConsoleCommand {
 		$output->writeln('running ...');
 		$this->cli->setOutput($output);
 		$output->writeln('collecting logs');
-		$logs = array();
-		if ($input->getOption('tmp')) {
-			$output->writeln("from tmp");
-			$logs = $this->collectAccessLogsFromTmp();
-
-		} else {
-			$logs = $this->collectAccessLogs();
-		}
+		$logs = $this->collectAccessLogs();
 		foreach ($logs as $path) {
 			$output->writeln('<info>'. $path ."</info>");
 		}
-		$output->writeln('processing logs');
-		$this->processAccessLogs($logs);
-		$output->writeln('saving data');
-		$this->saveData();
-		$output->writeln('outputting data');
-		$this->outputData($output);
+		$output->writeln('collected');
 		$output->writeln('... finish');
 	}
 
-	private function collectAccessLogsFromTmp() {
-		$logs = array();
-		$dir = new \DirectoryIterator('tmp');
 
-		/**
-		 * @var \SplFileInfo $fileinfo
-		 */
-		foreach ($dir as $fileinfo) {
-			if (!$fileinfo->isDot()) {
-				$logs[] = $fileinfo->getRealPath();
-			}
-		}
-
-		return $logs;
-	}
 
 	private function collectAccessLogs() {
 		$logs = array();
@@ -106,12 +75,7 @@ class CollectData extends ConsoleCommand {
 		return $logs;
 	}
 
-	private function processAccessLogs(array $logs) {
-		foreach ($logs  as $path) {
-			$this->processor->addLog($path);
-		}
-		$this->processor->process();
-	}
+
 
 	private function saveData() {
 
