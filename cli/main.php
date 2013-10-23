@@ -7,11 +7,11 @@ $currentDir = dirname(__FILE__);
 require_once $currentDir . '/../vendor/autoload.php';
 
 use Apirevmonitor\Application;
-
-if (!is_readable('/../etc/config.json')) {
-	exit('copy etc/config.json.dist and rename it to config.json'."\n");
+$configPath = $currentDir . '/../etc/config.json';
+if (!is_readable($configPath)) {
+	exit('copy etc/config.json.dist and rename it to config.json | check permissions'."\n");
 }
-$rawJsonConfig = file_get_contents($currentDir . '/../etc/config');
+$rawJsonConfig = file_get_contents($configPath);
 $config = json_decode($rawJsonConfig, true);
 
 $db = new SQLite3($config['db_path']);
