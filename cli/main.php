@@ -8,7 +8,10 @@ require_once $currentDir . '/../vendor/autoload.php';
 
 use Apirevmonitor\Application;
 
-$rawJsonConfig = file_get_contents($currentDir . '/../etc/config.json.dist');
+if (!is_readable('/../etc/config.json')) {
+	exit('copy etc/config.json.dist and rename it to config.json');
+}
+$rawJsonConfig = file_get_contents($currentDir . '/../etc/config');
 $config = json_decode($rawJsonConfig, true);
 
 $db = new SQLite3($config['db_path']);

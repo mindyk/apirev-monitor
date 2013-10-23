@@ -6,3 +6,4 @@ var/log/*
 tmp/*
 vendor/*
 etc/*db
+etc/config.json
